@@ -28,8 +28,8 @@ PROXY_ENABLED = False
 
 # Logging Configuration
 LOG_LEVEL = "INFO"
-# os.makedirs("logs", exist_ok=True)
-# LOG_FILE = f"./logs/{datetime.now().strftime('%Y.%m.%d')}.log"
+os.makedirs("logs", exist_ok=True)
+LOG_FILE = f"./logs/{datetime.now().strftime('%Y.%m.%d')}.log"
 
 SPIDER_MODULES = ["gis.spiders"]
 NEWSPIDER_MODULE = "gis.spiders"
