@@ -15,7 +15,7 @@ from gis.items import MediaItem, MenuItem, OrganizationItem, ReviewItem
 class OrganizationsSpider(Spider):
     name = "organizations"
 
-    version = "2026.02.06"
+    version = "2026.02.07"
 
     allowed_domains = ["2gis.ru", "2gis.com"]
 
@@ -289,7 +289,6 @@ class OrganizationsSpider(Spider):
             (album for album in data.get("albums", []) if album["id"] == "all"), None
         )
         albums = [album for album in albums if album["id"] != "all"]
-        albums = []
         if response.meta["album_type"] == "all":
             if albums:
                 for album in albums:
