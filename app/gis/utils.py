@@ -6,7 +6,9 @@ from scrapy.http import Request, Response
 
 from gis.constants import (CITIES_FILE_POSSIBLE_KEYS, CITIES_IDS_POSSIBLE_KEYS,
                            CONFLICTING_KEYS, MEDIA_URL_TEMPLATE,
-                           MENUS_URL_TEMPLATE, REVIEWS_URL_TEMPLATE,
+                           MENUS_URL_TEMPLATE, PARSE_MEDIA_POSSIBLE_KEYS,
+                           PARSE_MENUS_POSSIBLE_KEYS,
+                           PARSE_REVIEWS_POSSIBLE_KEYS, REVIEWS_URL_TEMPLATE,
                            RUBRICS_CODES_POSSIBLE_KEYS,
                            RUBRICS_FILE_POSSIBLE_KEYS, TRUE_VARIATIONS,
                            URL_TEMPLATE)
