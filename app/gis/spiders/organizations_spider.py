@@ -71,6 +71,7 @@ class OrganizationsSpider(Spider):
                 response.meta["rubric"]["label"],
                 response.url,
             )
+            return
 
         total = data["result"]["total"]
         if total > self.max_items:

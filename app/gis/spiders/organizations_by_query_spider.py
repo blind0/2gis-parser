@@ -71,6 +71,7 @@ class OrganizationsByQuerySpider(Spider):
                 response.meta["query"],
                 response.url,
             )
+            return
 
         total = data["result"]["total"]
         if total > self.max_items:
