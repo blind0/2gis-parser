@@ -186,8 +186,6 @@ class OrganizationsSpider(Spider):
                     errback=self.handle_error,
                 )
 
-            break
-
     def parse_reviews_page(
         self, response: Response
     ) -> Generator[ReviewItem, None, None]:
