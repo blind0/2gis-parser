@@ -12,8 +12,8 @@ from gis.constants import RUBRICS_WITH_MENU_TAB, RUBRICS_WITH_PRICE_TAB
 from gis.items import MediaItem, MenuItem, OrganizationItem, ReviewItem
 
 
-class OrganizationsSpider(Spider):
-    name = "organizations"
+class OrganizationsByQuerySpider(Spider):
+    name = "organizations_by_query"
 
     version = "2026.02.07"
 
@@ -30,25 +30,25 @@ class OrganizationsSpider(Spider):
         name: str | None = None,
         **kwargs: Any,
     ) -> None:
-        self.logger.info("Starting Organizations spider v%s", self.version)
+        self.logger.info("Starting OrganizationsByQuery spider v%s", self.version)
 
         super().__init__(name, **kwargs)
 
         self.settings = get_project_settings()
         (
-            self.rubrics,
+            self.queries,
             self.cities,
             self.parse_reviews,
             self.parse_menus,
             self.parse_media,
-        ) = utils.parse_list_kwargs_config(kwargs)
+        ) = utils.parse_query_kwargs_config(kwargs)
 
     def start_requests(self) -> Iterable[Request]:
         for city in self.cities:
-            for rubric in self.rubrics:
-                yield utils.create_search_pagination_request(
+            for query in self.queries:
+                yield utils.create_query_pagination_request(
                     city=city,
-                    rubric=rubric,
+                    query=query,
                     page=1,
                     per_page=self.per_page,
                     callback=self.parse,
@@ -57,18 +57,18 @@ class OrganizationsSpider(Spider):
 
     def parse(self, response: Response) -> Iterable[Request]:
         self.logger.info(
-            "Received initial response for city %s, rubric %s",
+            "Received initial response for city %s, query %s",
             response.meta["city"]["name"],
-            response.meta["rubric"]["label"],
+            response.meta["query"],
         )
 
         data = response.json()
         if data["meta"]["code"] >= 400 and data["meta"]["code"] < 600:
             self.logger.warning(
-                "Received error code %s for city %s, rubric %s. URL - %s",
+                "Received error code %s for city %s, query %s. URL - %s",
                 data["meta"]["code"],
                 response.meta["city"]["name"],
-                response.meta["rubric"]["label"],
+                response.meta["query"],
                 response.url,
             )
 
@@ -84,19 +84,19 @@ class OrganizationsSpider(Spider):
         total_pages = ceil(total / self.per_page)
 
         self.logger.info(
-            "Found %s total items on %s total pages for city %s, rubric %s. URL - %s",
+            "Found %s total items on %s total pages for city %s, query %s. URL - %s",
             total,
             total_pages,
             response.meta["city"]["name"],
-            response.meta["rubric"]["label"],
+            response.meta["query"],
             response.url,
         )
 
         yield from self.parse_page(response)
         for page in range(2, total_pages + 1):
-            yield utils.create_search_pagination_request(
+            yield utils.create_query_pagination_request(
                 city=response.meta["city"],
-                rubric=response.meta["rubric"],
+                query=response.meta["query"],
                 page=page,
                 per_page=self.per_page,
                 callback=self.parse_page,
@@ -105,19 +105,19 @@ class OrganizationsSpider(Spider):
 
     def parse_page(self, response: Response) -> Generator[OrganizationItem, None, None]:
         self.logger.info(
-            "Parsing page %s for city %s, rubric %s",
+            "Parsing page %s for city %s, query %s",
             response.meta.get("page", 1),
             response.meta["city"]["name"],
-            response.meta["rubric"]["label"],
+            response.meta["query"],
         )
 
         data = response.json()
         if data["meta"]["code"] >= 400 and data["meta"]["code"] < 600:
             self.logger.warning(
-                "Received error code %s for city %s, rubric %s. URL - %s",
+                "Received error code %s for city %s, query %s. URL - %s",
                 data["meta"]["code"],
                 response.meta["city"]["name"],
-                response.meta["rubric"]["label"],
+                response.meta["query"],
                 response.url,
             )
             return
@@ -136,7 +136,7 @@ class OrganizationsSpider(Spider):
                 **entry,
                 meta={
                     "city": response.meta["city"],
-                    "rubric": response.meta["rubric"],
+                    "query": response.meta["query"],
                 },
             )
             self.seen_organizations.add(key)

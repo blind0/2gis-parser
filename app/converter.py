@@ -42,6 +42,8 @@ def convert_entry(entry: dict) -> dict:
 
     adm_div = entry.get("adm_div", []) or []
 
+    item["Адрес"] = entry.get("full_address_name")
+
     item["Страна"] = extract_address_part(adm_div, "country")
     item["Регион"] = extract_address_part(adm_div, "region")
     item["Округ"] = extract_address_part(adm_div, "district_area")
