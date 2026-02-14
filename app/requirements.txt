@@ -1,5 +1,5 @@
 scrapy==2.13.3
 python-dotenv
 ijson
-rv_converter
+rv-converter
 scrapy-rotating-proxies @ git+https://github.com/ruvn-1fgas/scrapy-rotating-proxies.git
